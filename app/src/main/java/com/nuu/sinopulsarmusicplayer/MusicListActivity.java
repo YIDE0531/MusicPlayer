@@ -4,18 +4,27 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.nuu.sinopulsarmusicplayer.Adapter.MusicListAdapter;
@@ -23,6 +32,8 @@ import com.nuu.sinopulsarmusicplayer.Model.MusicListModel;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.nuu.sinopulsarmusicplayer.AlbumActivity.position;
 import static com.nuu.sinopulsarmusicplayer.AlbumActivity.isThisPage;
@@ -30,10 +41,12 @@ import static com.nuu.sinopulsarmusicplayer.AlbumActivity.mediaPlayer;
 import static com.nuu.sinopulsarmusicplayer.AlbumActivity.tracks;
 
 public class MusicListActivity extends baseActivity {
-    private ImageView imvPicture;
+    public final String regEx = "[`~!@#$%^&*()=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——|{}【】‘；：”“’。，、？]|\n|\r|\t";
+    private ImageView imvPicture, imvBack;
     private ImageButton play, previous, next;
     private LinearLayout llGoMusic;
-    private TextView title, tvSingerName;
+    private TextView title, tvSingerName, tvTitle, tvTitleName;
+    private EditText edtSearch;
     private RecyclerView lvAlbum;
     private ProgressBar progressBar;
     private VideoThreed vdThread;
@@ -47,7 +60,9 @@ public class MusicListActivity extends baseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_music_list);
+
         mContext = MusicListActivity.this;
         isSecondPage = true;
 
@@ -64,11 +79,15 @@ public class MusicListActivity extends baseActivity {
     }
 
     void init(){
+        imvBack =  (ImageView) findViewById(R.id.header_bar_left_btn);
         previous = findViewById(R.id.imb_previous);
         play = findViewById(R.id.imb_play);
         next = findViewById(R.id.imb_next);
         title = findViewById(R.id.tv_title);
         tvSingerName = findViewById(R.id.tv_singer_name);
+        tvTitle = findViewById(R.id.header_bar_title_text);
+        tvTitleName = findViewById(R.id.tv_singer);
+        edtSearch = (EditText) findViewById(R.id.edt_search);
 
         lvAlbum = findViewById(R.id.lv_album);
         imvPicture = findViewById(R.id.imv_picture);
@@ -89,6 +108,7 @@ public class MusicListActivity extends baseActivity {
         lvAlbum.setItemAnimator(new DefaultItemAnimator());
         albumAdapter = new MusicListAdapter(mContext, musicList);
         lvAlbum.setAdapter(albumAdapter);
+        moveToPosition((LinearLayoutManager) lvAlbum.getLayoutManager(), position);
 
         title.setText(tracks.get(position).getTitle());
         Glide.with(mContext).load(tracks.get(position).getImage())
@@ -110,9 +130,21 @@ public class MusicListActivity extends baseActivity {
             }
             albumAdapter.notifyDataSetChanged();
         }
+        edtSearch.setVisibility(View.VISIBLE);
+        tvTitle.setVisibility(View.GONE);
+        tvTitleName.setVisibility(View.GONE);
     }
 
     void initListener(){
+        imvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isThisPage = true;
+                isSecondPage = false;
+                finish();
+            }
+        });
+
         previous.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,7 +195,6 @@ public class MusicListActivity extends baseActivity {
                     albumAdapter.notifyDataSetChanged();
                 }
 
-
                 if(AlbumActivity.position != position){
                     mediaPlayer.stop();
                     try {
@@ -187,6 +218,55 @@ public class MusicListActivity extends baseActivity {
             }
         });
 
+        // Capture Text in EditText
+        edtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                // TODO Auto-generated method stub
+                String text = edtSearch.getText().toString();
+                if(isSpecialChar(text)){
+                    //特殊字元檢核沒有通過
+                    ((Activity) mContext).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(mContext, "字元有誤", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    edtSearch.setText("");
+                    return ;
+                }
+                if (albumAdapter!=null) {
+                    albumAdapter.filter(text);
+                }
+            }
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1,
+                                          int arg2, int arg3) {
+                // TODO Auto-generated method stub
+            }
+            @Override
+            public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+                                      int arg3) {
+                // TODO Auto-generated method stub
+            }
+        });
+
+        edtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId,
+                                          KeyEvent event) {
+                // TODO Auto-generated method stub
+                if ((actionId == EditorInfo.IME_ACTION_DONE) ||
+                        (actionId == EditorInfo.IME_ACTION_GO) ||
+                        (actionId == EditorInfo.IME_ACTION_NEXT) ||
+                        (actionId == EditorInfo.IME_ACTION_SEND) ||
+                        (actionId == EditorInfo.IME_ACTION_SEARCH) ||
+                        (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    hideSoftInputWindow();
+                }
+                return true;
+            }
+        });
     }
 
     @Override
@@ -386,6 +466,7 @@ public class MusicListActivity extends baseActivity {
                         .into(imvPicture);
                 title.setText(tracks.get(position).getTitle());
                 tvSingerName.setText(tracks.get(position).getArtist());
+                moveToPosition((LinearLayoutManager) lvAlbum.getLayoutManager(), position);
 
                 if(vdThread==null||!vdThread.isAlive()){
                     vdThread = new VideoThreed();
@@ -393,5 +474,38 @@ public class MusicListActivity extends baseActivity {
                 }
                 break;
         }
+    }
+
+    /**
+     * 滑动到指定位置
+     */
+    public void moveToPosition(LinearLayoutManager manager, int n) {
+        manager.scrollToPositionWithOffset(n, 0);
+        manager.setStackFromEnd(true);
+    }
+
+    // 隱藏軟體鍵盤
+    synchronized protected void hideSoftInputWindow()
+    {	InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        View view = getCurrentFocus();
+        if (view != null) {
+            if (imm.isActive()) {
+                // 將鍵盤收起來
+                imm.hideSoftInputFromWindow(getCurrentFocus()
+                        .getWindowToken(), 0);
+            }
+        }
+    }
+
+    /**
+     * 判断是否含有特殊字符
+     *
+     * @param str
+     * @return true为包含，false为不包含
+     */
+    public boolean isSpecialChar(String str) {
+        Pattern p = Pattern.compile(regEx);
+        Matcher m = p.matcher(str);
+        return m.find();
     }
 }

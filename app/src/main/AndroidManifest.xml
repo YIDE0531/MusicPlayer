@@ -20,6 +20,7 @@
 
         <activity
             android:name=".MusicListActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:screenOrientation="portrait"/>
 
         <activity

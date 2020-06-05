@@ -16,8 +16,9 @@ import java.util.ArrayList;
 
 public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.ViewHandler> implements View.OnClickListener{
     private OnItemClickListener mOnItemClickListener = null;
-    ArrayList<MusicListModel> PIModel;
+    ArrayList<MusicListModel> PIModel, allList;
     Context context;
+
     //define interface
     public interface OnItemClickListener {
         void onItemClick(View view , int position);
@@ -30,6 +31,8 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.View
     public MusicListAdapter(Context context, ArrayList<MusicListModel> PIModel){
         this.context = context;
         this.PIModel = PIModel;
+        this.allList = new ArrayList<>();
+        this.allList.addAll(PIModel);
     }
 
     @NonNull
@@ -98,4 +101,16 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.View
         }
     }
 
+    // Filter Class
+    public void filter(String charText) {
+        PIModel.clear();
+        MusicListModel mdata;
+        for(int i=0;i<allList.size();i++) {
+            if (allList.get(i).getAlbumName().toLowerCase().contains(charText.toLowerCase())) {
+                mdata = new MusicListModel(allList.get(i).getAlbumName(), allList.get(i).getSinger(), allList.get(i).getAlbumSerial(), allList.get(i).getAlbumTime());
+                PIModel.add(mdata);
+            }
+        }
+        notifyDataSetChanged();
+    }
 }

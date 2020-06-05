@@ -7,6 +7,16 @@
     android:orientation="vertical"
     tools:context=".MusicListActivity">
 
+    <LinearLayout
+        android:id="@+id/ll_ation_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#303030">
+
+        <include layout="@layout/include_header_bar" />
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lv_album"
         android:layout_width="match_parent"
