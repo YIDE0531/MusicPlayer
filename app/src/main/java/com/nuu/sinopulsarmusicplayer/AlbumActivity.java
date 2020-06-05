@@ -1,5 +1,6 @@
 package com.nuu.sinopulsarmusicplayer;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -60,7 +61,7 @@ public class AlbumActivity extends baseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
 
-        String[] permission = {WRITE_EXTERNAL_STORAGE};
+        String[] permission = {WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
         if (!hasPermissions(AlbumActivity.this, permission)){
             ActivityCompat.requestPermissions(this, permission, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
         }else{

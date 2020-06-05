@@ -168,13 +168,18 @@ public class musicActivity extends baseActivity implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            case R.id.header_bar_right_btn:
+                Intent intent = new Intent();
+                intent.setClass(mContext, AudioFxActivity.class);
+                Bundle bundle = new Bundle();
+                //bundle.putString("songName", musicList.get(position).getAlbumName());
+                intent.putExtras(bundle);
+                startActivityForResult(intent, 101);
+                break;
             case R.id.header_bar_left_btn:
                 isThisPage = true;
                 MusicListActivity.isSecondPage = true;
                 finish();
-                break;
-            case R.id.header_bar_right_btn:
-
                 break;
             case R.id.imv_random:
 
