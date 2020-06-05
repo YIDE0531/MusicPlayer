@@ -30,9 +30,9 @@ public abstract class baseActivity extends AppCompatActivity implements MediaPla
             createChannel();
             registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
             startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
+            registerHeadsetPlugReceiver();
         }
 
-        registerHeadsetPlugReceiver();
     }
 
     private void createChannel() {
@@ -89,8 +89,10 @@ public abstract class baseActivity extends AppCompatActivity implements MediaPla
     protected void onDestroy() {
         super.onDestroy();
         stopNotification();
-        unregisterReceiver(broadcastReceiver);
-        unregisterReceiver(headsetPlugReceiver);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            unregisterReceiver(broadcastReceiver);
+            unregisterReceiver(headsetPlugReceiver);
+        }
     }
 
     @Override

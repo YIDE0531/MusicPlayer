@@ -69,15 +69,20 @@ public class AlbumActivity extends baseActivity {
             init();
             initData();
             initListener();
-            mediaPlayer = new MediaPlayer();
-            try {
-                mediaPlayer.reset();
-                mediaPlayer.setDataSource(tracks.get(position).getSongPath());
-                mediaPlayer.prepare();                   // 准备
-            } catch (IOException e) {
-                e.printStackTrace();
+            if(tracks.size()>0){
+                mediaPlayer = new MediaPlayer();
+                try {
+                    mediaPlayer.reset();
+                    mediaPlayer.setDataSource(tracks.get(position).getSongPath());
+                    mediaPlayer.prepare();                   // 准备
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                mediaPlayer.setOnCompletionListener(this);
+            }else{
+                Toast.makeText(mContext, "找不到任何歌曲", Toast.LENGTH_SHORT).show();
+                this.finish();
             }
-            mediaPlayer.setOnCompletionListener(this);
         }
 
     }
@@ -404,15 +409,20 @@ public class AlbumActivity extends baseActivity {
                     init();
                     initData();
                     initListener();
-                    mediaPlayer = new MediaPlayer();
-                    try {
-                        mediaPlayer.reset();
-                        mediaPlayer.setDataSource(tracks.get(position).getSongPath());
-                        mediaPlayer.prepare();                   // 准备
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    if(tracks.size()>0){
+                        mediaPlayer = new MediaPlayer();
+                        try {
+                            mediaPlayer.reset();
+                            mediaPlayer.setDataSource(tracks.get(position).getSongPath());
+                            mediaPlayer.prepare();                   // 准备
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        mediaPlayer.setOnCompletionListener(this);
+                    }else{
+                        Toast.makeText(mContext, "找不到任何歌曲", Toast.LENGTH_SHORT).show();
+                        this.finish();
                     }
-                    mediaPlayer.setOnCompletionListener(this);
                 }else{
                     this.finish();
                     System.exit(0);
