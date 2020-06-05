@@ -358,6 +358,7 @@ public class AlbumActivity extends baseActivity {
         int musicTime;
         String show;
         DecimalFormat format = new DecimalFormat("00");
+        int i = 0;
 
         if(cursor.moveToFirst()){
             do {
@@ -370,10 +371,11 @@ public class AlbumActivity extends baseActivity {
                 //创建Music对象，并赋值
                 musicTime = length / 1000;
                 show = format.format(musicTime / 60) + ":" + format.format(musicTime % 60);
-                Track music = new Track(title, artist, R.drawable.album1, R.drawable.album1, path, show);
+                Track music = new Track(title, artist, R.drawable.album1, R.drawable.album1, path, show, i);
                 //Log.e("asd", "length:"+length+" title:"+title+" artist:"+artist+" album:"+album+" path:"+path+" albumBip:"+albumID);
                 //将music放入musicList集合中
                 tracks.add(music);
+                i++;
             }  while (cursor.moveToNext());
         }else {
             Toast.makeText(mContext, "本地没有音乐哦", Toast.LENGTH_SHORT).show();

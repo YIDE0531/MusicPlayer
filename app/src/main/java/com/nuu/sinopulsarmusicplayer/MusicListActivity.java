@@ -195,11 +195,12 @@ public class MusicListActivity extends baseActivity {
                     albumAdapter.notifyDataSetChanged();
                 }
 
-                if(AlbumActivity.position != position){
+                TextView textView = (TextView) view.findViewById(R.id.tv_serial);
+                if(AlbumActivity.position != Integer.valueOf(textView.getText().toString())-1){
                     mediaPlayer.stop();
                     try {
                         mediaPlayer.reset();
-                        mediaPlayer.setDataSource(tracks.get(position).getSongPath());
+                        mediaPlayer.setDataSource(tracks.get(Integer.valueOf(textView.getText().toString())-1).getSongPath());
                         mediaPlayer.prepare();                   // 准备
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -207,8 +208,7 @@ public class MusicListActivity extends baseActivity {
                     mediaPlayer.setOnCompletionListener(MusicListActivity.this);
                     mediaPlayer.start();
                 }
-
-                AlbumActivity.position = position;
+                AlbumActivity.position = Integer.valueOf(textView.getText().toString())-1;
                 Intent intent = new Intent();
                 intent.setClass(mContext, musicActivity.class);
                 Bundle bundle = new Bundle();

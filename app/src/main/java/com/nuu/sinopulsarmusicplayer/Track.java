@@ -6,16 +6,16 @@ public class Track {
     private String artist;
     private String songPath;
     private String songTime;
+    private int image, song, albumSerial;
 
-    private int image, song;
-
-    public Track(String title, String artist, int image, int song, String songPath, String songTime) {
+    public Track(String title, String artist, int image, int song, String songPath, String songTime, int albumSerial) {
         this.title = title;
         this.artist = artist;
         this.image = image;
         this.song = song;
         this.songPath = songPath;
         this.songTime = songTime;
+        this.albumSerial = albumSerial;
     }
 
     public String getTitle() {
@@ -60,5 +60,9 @@ public class Track {
 
     public String getSongPath() {
         return songPath;
+    }
+
+    public int getAlbumSerial() {
+        return albumSerial;
     }
 }
