@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MusicListActivity">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/lv_album"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="#484848">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#484848"
+        android:layout_marginBottom="-8dp"
+        android:layout_marginTop="-4dp">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:progressTint="#57a8b4"
+            android:progressBackgroundTint="#428994" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_go_music"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#383837"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/imv_picture"
+            android:layout_width="75dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:background="#383837"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/t1" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="wwwwwww"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_singer_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_title"
+                android:layout_centerInParent="true"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="123"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/imb_previous"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_skip_previous_black_24dp" />
+
+        <ImageButton
+            android:id="@+id/imb_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_play_arrow_black_24dp" />
+
+        <ImageButton
+            android:id="@+id/imb_next"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_skip_next_black_24dp" />
+    </LinearLayout>
+
+</LinearLayout>
